@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ProductscontrolBar from "./productscontrolBar";
 
 import { commerce } from "./lib/commerce";
 import { Product } from "@chec/commerce.js/types/product.js";
+import { ThemeContext } from "../../homepage";
 
 type props = {
   categories: string[];
@@ -10,18 +11,35 @@ type props = {
   sortBy: string;
   setSortBy: React.Dispatch<React.SetStateAction<string>>;
 };
+
+type map = {
+  [x: string]: number;
+};
+
 const Productcontainer = ({
   categories,
   setCategories,
   sortBy,
   setSortBy,
 }: props) => {
+  const theme: string = useContext(ThemeContext);
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState<unknown>(null);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-
+  const [productQuanityMenu, setProductQuanityMenu] = useState<string[]>([]);
   const handleAddToCart = async (productId: string, quanity: number) => {
     await commerce.cart.add(productId, quanity);
+  };
+
+  const handleQuanity = (productName: string): number => {
+    const map = productQuanityMenu.reduce(
+      (acc: map, value: string) => ({
+        ...acc,
+        [value]: (acc[value] || 0) + 1,
+      }),
+      {}
+    );
+    return map[productName];
   };
 
   const fetchProducts = async () => {
@@ -29,10 +47,11 @@ const Productcontainer = ({
     try {
       const { data } = await commerce.products.list({
         limit: 100,
-        
       });
-      {/**setProducts on LocaleStorage */}
-      localStorage.setItem("products",JSON.stringify(data))
+      {
+        /**setProducts on LocaleStorage */
+      }
+      localStorage.setItem("products", JSON.stringify(data));
       const filterProducts = data.filter((product) => {
         for (let i = 0; i < product.categories.length; i++) {
           if (categories[0] === "mens" || categories[0] === "womens") {
@@ -68,7 +87,7 @@ const Productcontainer = ({
       );
       setIsLoaded(true);
     } catch (error) {
-      localStorage.removeItem("products")
+      localStorage.removeItem("products");
       setIsLoaded(true);
       setError(error);
     }
@@ -76,8 +95,6 @@ const Productcontainer = ({
 
   useEffect(() => {
     fetchProducts();
-
-    console.log(localStorage.getItem('products'));
   }, [categories, sortBy]);
 
   return (
@@ -88,12 +105,25 @@ const Productcontainer = ({
         sort={sortBy}
         setSort={setSortBy}
       ></ProductscontrolBar>
+      <div className=" mx-5 h-[1px] bg-black/40 mt-5 max-mobile:mt-20"></div>
       <div className="fit mx-10  flex flex-row flex-wrap mt-5 justify-evenly gap-4 h-fit">
         {error === null ? (
           isLoaded ? (
             products.map((product) => (
               <div key={product.created}>
-                <div className="relative  font-semibold text-gray-700 border-4   border-black/20 w-60 bg-white  h-[430px] rounded-md overflow-hidden">
+                <div
+                  className={
+                    "relative  font-semibold text-gray-700 border-4   w-60   h-[298px] rounded-md overflow-hidden" +
+                    ((theme === "cold" ? " bg-gray-200 border-black/20 " : "") +
+                      (theme === "warm"
+                        ? " bg-orange-200/30  border-orange-700/20 "
+                        : "") +
+                      (theme === "light" ? " bg-white border-black/20 " : "") +
+                      (theme === "dark"
+                        ? " bg-neutral-300 border-black/40"
+                        : ""))
+                  }
+                >
                   <div className="w-full h-[298px]  shadow-[inset_0_-2px_25px_rgba(0,0,0,0.2)]">
                     {/**spinner */}
                     <div className="left-1/2 -translate-x-1/2 top-5 absolute w-48  h-64 ">
@@ -128,20 +158,114 @@ const Productcontainer = ({
                       }
                       alt=""
                     />
+                    <div className={"absolute w-full h-full "+(theme === "dark" ? " bg-slate-500/20  " : "") }></div>
                   </div>
-
-                  <div className="absolute bottom-0 w-full h-32 bg-zinc-700 p-4  rounded-sm bg-gradient-to-t transition-transform duration-300  ">
-                    <p className=" w-52 line-clamp-1 mb-5 text-white/90 text-sm">
-                      {product.name}
-                    </p>
-                    <p className=" inline text-orange-300">price:</p>
-                    <span className="text-orange-300">
+                  <div
+                    className={
+                      "inline w-fit absolute top-2  rounded-md p-[6px] left-2 text-white/70 text-sm" +
+                      ((theme === "cold" ? " bg-slate-500/90  " : "") +
+                        (theme === "warm" ? " bg-orange-600/90   " : "") +
+                        (theme === "light" ? " bg-neutral-500  " : "") +
+                        (theme === "dark" ? " bg-neutral-500 " : ""))
+                    }
+                  >
+                    price :{" "}
+                    <span className="text-white left-16">
                       {product.price.formatted_with_symbol}
                     </span>
+                  </div>
+
+                  <div className="absolute bottom-0 w-full h-24  from-black/30 p-4  rounded-sm bg-gradient-to-t transition-transform duration-300  ">
+                    <p
+                      className={
+                        " transition-transform duration-500 leading-5 w-fit mt-4 max-w-40 line-clamp-2  ml-0 text-white/90 p-1 rounded-md text-xs overflow-hidden" +
+                        (productQuanityMenu.includes(product.name)
+                          ? " -translate-y-2/4 "
+                          : " ") +
+                        ((theme === "cold"
+                          ? " bg-slate-800/80  text-white/90 "
+                          : "") +
+                          (theme === "warm" ? " bg-orange-800/90   " : "") +
+                          (theme === "light" ? " bg-neutral-700  " : "") +
+                          (theme === "dark" ? " bg-neutral-700 " : ""))
+                      }
+                    >
+                      {product.name}
+                    </p>
+
                     <span
-                      className="absolute right-4 bottom-4 bg-addtocartIcone w-8 h-8 bg-contain bg-no-repeat cursor-pointer"
-                      onClick={() => handleAddToCart(product.id, 1)}
+                      className={
+                        "absolute right-2 bottom-2 bg-addtocartIcone  bg-center rounded-full w-9 h-9 bg-[length:60%_60%] bg-no-repeat cursor-pointer" +
+                        (productQuanityMenu.includes(product.name)
+                          ? " hidden"
+                          : "") +
+                        ((theme === "cold"
+                          ? " bg-slate-800/90 "
+                          : "") +
+                          (theme === "warm" ? " bg-orange-950/90   " : "") +
+                          (theme === "light" ? " bg-neutral-900  " : "") +
+                          (theme === "dark" ? " bg-neutral-900 " : ""))
+                      }
+                      onClick={() => {
+                        setProductQuanityMenu([
+                          ...productQuanityMenu,
+                          product.name,
+                        ]);
+                      }}
                     ></span>
+
+                    <div
+                      className={
+                        "text-white/90 bottom-2 w-52 left-3 gap-1 rounded-md flex flex-row absolute" +
+                        (productQuanityMenu.includes(product.name)
+                          ? " "
+                          : " hidden")
+                      }
+                    >
+                      <button
+                        className="bg-black/70  w-7 text-white rounded-md"
+                        onClick={() => {
+                          productQuanityMenu.splice(
+                            productQuanityMenu.indexOf(product.name),
+                            1
+                          );
+                          setProductQuanityMenu([...productQuanityMenu]);
+                          console.log(productQuanityMenu);
+                        }}
+                      >
+                        -
+                      </button>
+                      <div
+                        className="w-44 h-7 bg-black/70 text-xs text-white rounded-md flex flex-row cursor-pointer "
+                        onClick={() => {
+                          handleAddToCart(
+                            product.id,
+                            handleQuanity(product.name)
+                          );
+                          productQuanityMenu.splice(
+                            productQuanityMenu.indexOf(product.name),
+                            handleQuanity(product.name)
+                          );
+                          setProductQuanityMenu([...productQuanityMenu]);
+                        }}
+                      >
+                        <p className="m-auto">
+                          Quanity = {handleQuanity(product.name)} addtoCart
+                        </p>{" "}
+                      </div>
+                      <button
+                        className="bg-black/70  w-7 text-white rounded-md"
+                        onClick={() => {
+                          setProductQuanityMenu([
+                            ...productQuanityMenu,
+                            product.name,
+                          ]);
+                          console.log(productQuanityMenu);
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

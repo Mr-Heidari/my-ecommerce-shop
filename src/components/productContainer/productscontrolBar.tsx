@@ -6,6 +6,8 @@ type props = {
   // fetchProducts: () => Promise<void>;
   // dataLoader:boolean
 };
+import { useContext } from "react";
+import { ThemeContext } from "../../homepage";
 
 const ProductscontrolBar = ({
   categories,
@@ -13,6 +15,7 @@ const ProductscontrolBar = ({
   sort,
   setSort,
 }: props) => {
+  const theme: string = useContext(ThemeContext);
   const handleCategoriesClass = (categoriesname: string) => {
     if (categories[0] === "mens") {
       if (categoriesname === categories[1]) return "scale-125";
@@ -23,61 +26,81 @@ const ProductscontrolBar = ({
 
   return (
     <div id="controlBar">
-      <div className=" flex flex-row mx-5 h-14 mt-10 p-2 max-md:mt-5 max-md:text-xs max-sm:mx-1  justify-between  ">
+      <div className="relative flex flex-row mx-5 h-14 mt-10 p-2 max-md:mt-5 max-md:text-xs max-sm:mx-1  justify-between text-black/60 max-mobile:justify-center ">
         {/**categories */}
-        <div className=" w-[20%]  justify-between flex flex-row max-md:w-[35%] max-sm:w-[45%] ">
+        <div className=" w-fit  justify-between flex flex-row   ">
           <button
             className={
-              " bg-gray-300 p-2 px-4 rounded-sm max-md:px-2" +
+              "  p-2 px-4 transition duration-300" +
               (categories[0] === "all"
-                ? " bg-gray-600 text-white"
-                : " bg-gray-300 text-gray-800")
+                ? (theme === "cold" ? " bg-gray-600 text-white" : "") +
+                  (theme === "warm" ? " bg-orange-700  text-white" : "") +
+                  (theme === "light" ? " bg-gray-500 text-white" : "") +
+                  (theme === "dark" ? " bg-neutral-800 text-white/60" : "")
+                : (theme === "cold" ? " bg-gray-300 text-black" : "") +
+                  (theme === "warm" ? " bg-orange-300  text-black" : "") +
+                  (theme === "light" ? " bg-gray-100 text-black" : "") +
+                  (theme === "dark" ? " bg-neutral-300 text-black/60" : ""))
             }
-            onClick={async() => {
+            onClick={async () => {
               setCategories(["all", "all"]);
-              
             }}
           >
             All
           </button>
           <button
             className={
-              " bg-gray-300 p-2 px-4 rounded-sm max-md:px-2" +
+              "  p-2 px-4 transition duration-300" +
               (categories[0] === "mens"
-                ? " bg-gray-600 text-white"
-                : " bg-gray-300 text-gray-800")
+                ? (theme === "cold" ? " bg-gray-600 text-white" : "") +
+                  (theme === "warm" ? " bg-orange-700  text-white" : "") +
+                  (theme === "light" ? " bg-gray-500 text-white" : "") +
+                  (theme === "dark" ? " bg-neutral-800 text-white/60" : "")
+                : (theme === "cold" ? " bg-gray-300 text-black" : "") +
+                  (theme === "warm" ? " bg-orange-300  text-black" : "") +
+                  (theme === "light" ? " bg-gray-100 text-black" : "") +
+                  (theme === "dark" ? " bg-neutral-300 text-black/60" : ""))
             }
-            onClick={async() => {
+            onClick={async () => {
               setCategories(["mens", "all"]);
-              
             }}
           >
             Mens
           </button>
           <button
             className={
-              " bg-gray-300 p-2 px-4 rounded-sm max-md:px-2" +
+              "  p-2 px-4 transition duration-300" +
               (categories[0] === "womens"
-                ? " bg-gray-600 text-white"
-                : " bg-gray-300 text-gray-800")
+                ? (theme === "cold" ? " bg-gray-600 text-white" : "") +
+                  (theme === "warm" ? " bg-orange-700  text-white" : "") +
+                  (theme === "light" ? " bg-gray-500 text-white" : "") +
+                  (theme === "dark" ? " bg-neutral-800 text-white/60" : "")
+                : (theme === "cold" ? " bg-gray-300 text-black" : "") +
+                  (theme === "warm" ? " bg-orange-300  text-black" : "") +
+                  (theme === "light" ? " bg-gray-100 text-black" : "") +
+                  (theme === "dark" ? " bg-neutral-300 text-black/60" : ""))
             }
-            onClick={async() => {
+            onClick={async () => {
               setCategories(["womens", "allw"]);
-              
             }}
           >
             Womens
           </button>
           <button
             className={
-              " bg-gray-300 p-2 px-4 rounded-sm max-md:px-2" +
+              "  p-2 px-2 transition duration-300" +
               (categories[0] === "backpack"
-                ? " bg-gray-600 text-white"
-                : " bg-gray-300 text-gray-800")
+                ? (theme === "cold" ? " bg-gray-600 text-white" : "") +
+                  (theme === "warm" ? " bg-orange-700  text-white" : "") +
+                  (theme === "light" ? " bg-gray-500 text-white" : "") +
+                  (theme === "dark" ? " bg-neutral-800 text-white/60" : "")
+                : (theme === "cold" ? " bg-gray-300 text-black" : "") +
+                  (theme === "warm" ? " bg-orange-300  text-black" : "") +
+                  (theme === "light" ? " bg-gray-100 text-black" : "") +
+                  (theme === "dark" ? " bg-neutral-300 text-black/60" : ""))
             }
-            onClick={async() => {
+            onClick={async () => {
               setCategories(["backpack", "all"]);
-              
             }}
           >
             Backpack
@@ -119,7 +142,7 @@ const ProductscontrolBar = ({
                 }
                 onClick={() => {
                   setCategories(["mens", "mens-shirt-t-shirt"]);
-                  console.log('asasasa')
+                  console.log("asasasa");
                 }}
               >
                 shirts
@@ -207,7 +230,7 @@ const ProductscontrolBar = ({
               <button
                 className={
                   "transition-transform duration-500 " +
-                  handleCategoriesClass("bags")
+                  handleCategoriesClass("womens-bags")
                 }
                 onClick={() => {
                   setCategories(["womens", "womens-bags"]);
@@ -221,15 +244,21 @@ const ProductscontrolBar = ({
           )}
         </div>
         {/**sorts */}
-        <div className="w-[10%] flex flex-row justify-between  text-gray-800 max-xl:w-[15%] max-lg:w-[20%] max-sm:w-[30%]">
-          <span className="font-semibold my-auto mx-auto">Price</span>
+        <div className="w-[10%] flex flex-row justify-between max-sm:justify-end text-gray-800 max-xl:w-[15%] max-lg:w-[20%] max-sm:w-[30%] max-mobile:absolute max-mobile:top-[88px] max-mobile:right-2">
+          <span className="font-semibold my-auto mx-auto max-sm:hidden ">Price</span>
           <div>
             <button
               className={
-                "text-3xl w-8 h-10  mr-1 " +
+                "sm:text-3xl text-lg w-8 h-10 rounded-md  mr-1 " +
                 (sort === "low-high"
-                  ? " bg-gray-600 text-white"
-                  : " bg-gray-300 text-gray-800")
+                  ? (theme === "cold" ? " bg-gray-600 text-white" : "") +
+                    (theme === "warm" ? " bg-orange-700  text-white" : "") +
+                    (theme === "light" ? " bg-gray-500 text-white" : "") +
+                    (theme === "dark" ? " bg-neutral-800 text-white/60" : "")
+                  : (theme === "cold" ? " bg-gray-300 text-black" : "") +
+                    (theme === "warm" ? " bg-orange-300  text-black" : "") +
+                    (theme === "light" ? " bg-gray-100 text-black" : "") +
+                    (theme === "dark" ? " bg-neutral-300 text-black/60" : ""))
               }
               onClick={() => setSort("low-high")}
             >
@@ -237,10 +266,16 @@ const ProductscontrolBar = ({
             </button>
             <button
               className={
-                "text-3xl w-8 h-10  mr-1 " +
+                "sm:text-3xl text-lg w-8 h-10 rounded-md mr-1 " +
                 (sort === "high-low"
-                  ? " bg-gray-600 text-white"
-                  : " bg-gray-300 text-gray-800")
+                  ? (theme === "cold" ? " bg-gray-600 text-white" : "") +
+                    (theme === "warm" ? " bg-orange-700  text-white" : "") +
+                    (theme === "light" ? " bg-gray-500 text-white" : "") +
+                    (theme === "dark" ? " bg-neutral-800 text-white/60" : "")
+                  : (theme === "cold" ? " bg-gray-300 text-black" : "") +
+                    (theme === "warm" ? " bg-orange-300  text-black" : "") +
+                    (theme === "light" ? " bg-gray-100 text-black" : "") +
+                    (theme === "dark" ? " bg-neutral-300 text-black/60" : ""))
               }
               onClick={() => setSort("high-low")}
             >
@@ -250,10 +285,10 @@ const ProductscontrolBar = ({
         </div>
       </div>
       {/**specifices category  mobileVersion*/}
-      <div className="w-[40%] ml-8 max-sm:ml-3 text-sm max-md:text-xs min-w-[200px] max-md:w-[35%] max-sm:w-[45%]  lg:hidden">
+      <div className="w-[40%] ml-8 max-sm:ml-3 text-sm max-md:text-xs min-w-[200px] max-md:w-[35%] max-sm:w-[45%]  max-mobile:absolute max-mobile:ml-0 max-mobile:left-1/2 max-mobile:-translate-x-1/2 max-mobile:w-56  lg:hidden ">
         {/**mensCategories */}
         {categories[0] === "mens" ? (
-          <div className="flex flex-row justify-between h-10 p-1">
+          <div className="flex flex-row justify-between   h-10 p-1">
             <button
               className={
                 "transition-transform duration-500 " +

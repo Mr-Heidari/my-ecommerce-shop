@@ -40,6 +40,7 @@ export default {
         mastercard: "url('/src/assets/paymentIcones/svg/mastercard-fill.svg')",
         paypal: "url('/src/assets/paymentIcones/svg/paypal-fill.svg')",
         visa: "url('/src/assets/paymentIcones/svg/visa-fill.svg')",
+        themeIcone:"url('/src/assets/themeIcone.svg')",
       },
     },
   },
