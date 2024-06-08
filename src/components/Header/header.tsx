@@ -45,13 +45,13 @@ const Header = ({ setCategories, setTheme }: props) => {
 
           {/**Theme  */}
           <div
-            className="flex flex-row max-md:flex-col md:w-fit md:h-12 h-fit absolute max-md:left-[152px] left-36 -top-2 cursor-pointer max-mobile:-top-4 mt-[1px] max-mobile:mt-2 max-sm:mt-1 max-mobile:left-[125px] "
+            className="flex flex-row max-md:flex-col md:w-fit md:h-12  absolute max-md:left-[152px] left-36 -top-2 cursor-pointer max-mobile:-top-4 mt-[1px] max-mobile:mt-2 max-sm:mt-1 max-mobile:left-[125px] "
             onClick={() => setShowTheme((prev) => !prev)}
           >
-            <div className="bg-themeIcone max-md:absolute max-md:-left-7 max-sm:top-2 w-8 h-8 max-md:w-6 max-sm:h-6 bg-no-repeat bg-contain my-auto top-3"></div>
+            <div className="bg-themeIcone  max-md:absolute max-md:-left-7 max-sm:top-2 w-8 h-8 max-md:w-6 max-sm:h-6 bg-no-repeat bg-contain my-auto top-3"></div>
             <div
               className={
-                "w-10 h-10 max-md:w-8 max-md:h-8 bg-no-repeat rounded-full flex shadow-md  transition-color duration-500" +
+                "w-10 h-10 max-md:w-8 max-md:h-8 bg-no-repeat rounded-full flex shadow-md  transition-color duration-500 " +
                 (theme === "cold" ? " bg-gray-200 " : "") +
                 (theme === "warm" ? " bg-orange-200  " : "") +
                 (theme === "light" ? " bg-white/90 " : "") +
@@ -82,7 +82,7 @@ const Header = ({ setCategories, setTheme }: props) => {
             <div
               className={
                 "ml-3 max-md:ml-0 max-md:mt-2 md:transition-all md:duration-300  flex flex-row max-md:flex-col justify-between overflow-hidden  max-md:p-1 max-md:bg-neutral-600  max-md:rounded-md gap-1" +
-                (showTheme ? " w-44 h-12 max-md:w-fit max-md:h-fit" : " md:w-0 max-md:h-0 max-md:p-0 ")
+                (showTheme ? " w-44 h-12 max-md:w-fit max-md:h-fit" : " md:w-0 max-md:h-0 max-md:p-0 hidden")
               }
             >
               <div
